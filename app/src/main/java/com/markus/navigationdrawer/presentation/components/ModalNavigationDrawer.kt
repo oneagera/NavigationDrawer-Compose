@@ -1,4 +1,4 @@
-package com.markus.navigationdrawer.components
+package com.markus.navigationdrawer.presentation.components
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -13,6 +13,7 @@ import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Text
@@ -20,15 +21,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import kotlinx.coroutines.launch
-import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.markus.navigationdrawer.NavigationItem
 import com.markus.navigationdrawer.Screen
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun ModalNavigationDrawer(
@@ -37,31 +34,35 @@ fun ModalNavigationDrawer(
     drawerState: DrawerState,
     content: @Composable () -> Unit
 ) {
+    val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
+
     val items = listOf(
         NavigationItem(
             title = "Home",
             selectedIcon = Icons.Filled.Home,
             unselectedIcon = Icons.Outlined.Home,
+            route = Screen.HomeScreen.route,
             onClick = { navController.navigate(Screen.HomeScreen.route) }
         ),
         NavigationItem(
             title = "Urgent",
             selectedIcon = Icons.Filled.Info,
             unselectedIcon = Icons.Outlined.Info,
+            route = Screen.UrgentScreen.route,
             badgeCount = 45,
-            onClick = { }
+            onClick = { navController.navigate(Screen.UrgentScreen.route) }
         ),
         NavigationItem(
             title = "Settings",
             selectedIcon = Icons.Filled.Settings,
             unselectedIcon = Icons.Outlined.Settings,
+            route = Screen.SettingsScreen.route,
             onClick = { navController.navigate(Screen.SettingsScreen.route) }
         )
     )
 
-    var selectedItemIndex by rememberSaveable {
-        mutableIntStateOf(0)
-    }
+    //Nesting selectedItemIndex with navigation so that the correct nav drawer item updates selection state as soon as we navigate
+    val selectedItemIndex = items.indexOfFirst { it.route == currentRoute }
 
     ModalNavigationDrawer(
         drawerContent = {
@@ -74,7 +75,6 @@ fun ModalNavigationDrawer(
                         selected = index == selectedItemIndex,
                         onClick = {
                             navigationItem.onClick()
-                            selectedItemIndex = index
                             scope.launch {
                                 drawerState.close() //close our drawer sheet once an item is selected
                             }

@@ -7,16 +7,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.markus.navigationdrawer.ui.theme.NavigationDrawerTheme
 import androidx.navigation.compose.rememberNavController
+import com.markus.navigationdrawer.presentation.HomeScreen
+import com.markus.navigationdrawer.presentation.SettingsScreen
+import com.markus.navigationdrawer.presentation.UrgentScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,6 +38,13 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable(route = Screen.HomeScreen.route) {
                             HomeScreen(
+                                navController = navController,
+                                scope = scope,
+                                drawerState = drawerState
+                            )
+                        }
+                        composable(route = Screen.UrgentScreen.route) {
+                            UrgentScreen(
                                 navController = navController,
                                 scope = scope,
                                 drawerState = drawerState

@@ -1,4 +1,4 @@
-package com.markus.navigationdrawer.components
+package com.markus.navigationdrawer.presentation.components
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.icons.Icons
@@ -8,7 +8,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
 import kotlinx.coroutines.CoroutineScope
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -18,13 +17,14 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Scaffold(
-    navController: NavController,
+    snackbarHost: @Composable () -> Unit,
     scope: CoroutineScope,
     drawerState: DrawerState,
     title: String,
-    content: @Composable (PaddingValues) -> Unit
+    content: @Composable (PaddingValues) -> Unit,
 ) {
     Scaffold(
+        snackbarHost = snackbarHost,
         topBar = {
             TopAppBar(
                 title = {
